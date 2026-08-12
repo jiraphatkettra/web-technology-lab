@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบลงทะเบียนเรียน - มหาวิทยาลัยแม่โจ้ (Reg MJU)</title>
+
+    <!-- Google Fonts: Prompt & Kanit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- เชื่อมต่อ Tailwind CSS (Maejo Reg Theme) -->
+    <link rel="stylesheet" href="./dist/output.css">
+
+    <style>
+        /* Custom Scrollbar styling */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f8fafc;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+
+<body class="bg-reg-bg text-slate-800 font-sans min-h-screen flex flex-col selection:bg-mju-100 selection:text-mju-900">
+
+    <!-- Header & Navbar ระบบบริการการศึกษา มหาวิทยาลัยแม่โจ้ -->
+    <header class="bg-mju-600 text-white shadow-lg sticky top-0 z-40">
+
+        <!-- แถบด้านบน: โลโก้, ช่องค้นหา, ข้อมูลโปรไฟล์, ปุ่มเมนู Slide Bar บนมือถือ -->
+        <div
+            class="max-w-7xl mx-auto px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-4 border-b border-mju-500/50">
+
+            <!-- 1. โลโก้ และ ชื่อระบบ -->
+            <div class="flex items-center gap-2.5 sm:gap-3 shrink-0">
+                <div
+                    class="bg-white/10 rounded-xl p-1 backdrop-blur-sm border border-white/20 hover:scale-105 transition-transform">
+                    <img src="./image/MJU_LOGO.svg.webp" alt="MJU Logo"
+                        class="w-8 h-8 sm:w-10 sm:h-10 object-contain drop-shadow">
+                </div>
+                <div>
+                    <h1 class="text-base sm:text-lg md:text-xl font-semibold tracking-tight leading-none text-white">
+                        ระบบบริการการศึกษา</h1>
+                    <p class="text-[10px] sm:text-xs text-mju-100 font-light mt-0.5">มหาวิทยาลัยแม่โจ้</p>
+                </div>
+            </div>
+
+            <!-- 2. ช่องค้นหา (Search Box - แสดงเฉพาะบน Desktop: lg:block เท่านั้น) -->
+            <div class="flex-1 max-w-md mx-2 sm:mx-4 hidden lg:block">
+            </div>
+
+            <!-- 3. ข้อมูลนักศึกษา & ปุ่มเปิด Slide Bar เมนูบนมือถือ/แท็บเล็ต -->
+            <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+                <!-- ชื่อและรหัส (ซ่อนบนมือถือเล็ก แสดงบน Tablet ขึ้นไป) -->
+                <a href="./profile.html" class="text-right hidden sm:block group">
+                    <p
+                        class="text-xs sm:text-sm font-semibold leading-tight text-white group-hover:text-gold-300 transition-colors">
+                        นายจิรภัทร เกตุตรา</p>
+                    <p class="text-[10px] sm:text-xs text-gold-300 font-medium">รหัส 6804101311</p>
+                </a>
+
+                <!-- ไอคอนผู้ใช้ (User Icon) -->
+                <a href="./profile.html" title="ดูระเบียนประวัตินักศึกษา"
+                    class="w-8 h-8 sm:w-10 sm:h-10 bg-mju-800 text-gold-400 rounded-full flex items-center justify-center border-2 border-gold-400 p-1 sm:p-1.5 shadow-md overflow-hidden hover:scale-105 transition-transform cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                        class="w-full h-full">
+                        <path fill-rule="evenodd"
+                            d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.6-7.812-1.7a.75.75 0 01-.437-.695z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </a>
+
+                <!-- ปุ่มเปิด Slide Bar Menu (Mobile & Tablet Button) -->
+                <button id="mobile-menu-btn" aria-label="Toggle Navigation Slide Bar"
+                    class="p-2 rounded-xl bg-mju-700 hover:bg-mju-800 text-white lg:hidden border border-mju-500/50 transition-all flex items-center gap-1.5 active:scale-95">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                        stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                    </svg>
+                    <span class="text-xs font-medium hidden sm:inline">เมนู</span>
+                </button>
+            </div>
+
+        </div>
+
+        <!-- แถบเมนูหลักบน Desktop (lg:block) -->
+        <div class="hidden lg:block bg-mju-700/95 backdrop-blur-md border-t border-mju-500/30">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between py-1">
+                <ul class="flex items-center gap-1 sm:gap-1.5 text-xs sm:text-sm font-medium py-1 whitespace-nowrap">
+
+                    <!-- 1. หน้าแรก -->
+                    <li>
+                        <a href="#"
+                            class="px-3 py-1.5 rounded-lg text-gold-300 font-semibold hover:bg-mju-800/60 hover:text-white transition-all inline-block">
+                            หน้าแรก
+                        </a>
+                    </li>
+
+                    <!-- 2. ข้อมูลที่ควรทราบ -->
+                    <li class="relative group">
+                        <button
+                            class="px-3 py-1.5 rounded-lg text-mju-100 hover:bg-mju-800/60 hover:text-white transition-all flex items-center gap-1 cursor-pointer">
+                            <span>ข้อมูลที่ควรทราบ</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
+                                stroke="currentColor"
+                                class="w-3.5 h-3.5 text-mju-200 group-hover:text-white transition-transform group-hover:rotate-180">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                            </svg>
+                        </button>
+                        <div
+                            class="absolute left-0 top-full hidden group-hover:block w-48 bg-white text-slate-800 rounded-xl shadow-xl border border-slate-100 py-2 z-50">
+                            <a href="#"
+                                class="block px-4 py-2 hover:bg-mju-50 hover:text-mju-700 text-xs transition-colors">ประกาศการลงทะเบียน</a>
+                            <a href="#"
+                                class="block px-4 py-2 hover:bg-mju-50 hover:text-mju-700 text-xs transition-colors">ปฏิทินการศึกษา</a>
+                            <a href="#"
+                                class="block px-4 py-2 hover:bg-mju-50 hover:text-mju-700 text-xs transition-colors">ระเบียบและข้อบังคับ</a>
+                        </div>
+                    </li>
+
+                    <!-- 3. นักศึกษา -->
+                    <li class="relative group">
+                        <button
+                            class="px-3 py-1.5 rounded-lg text-mju-100 hover:bg-mju-800/60 hover:text-white transition-all flex items-center gap-1 cursor-pointer">
+                            <span>นักศึกษา</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
+                                stroke="currentColor"
+                                class="w-3.5 h-3.5 text-mju-200 group-hover:text-white transition-transform group-hover:rotate-180">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                            </svg>
+                        </button>
+                        <div
+                            class="absolute left-0 top-full hidden group-hover:block w-52 bg-white text-slate-800 rounded-xl shadow-xl border border-slate-100 py-2 z-50">
+                            <a href="#"
+                                class="block px-4 py-2 hover:bg-mju-50 hover:text-mju-700 text-xs transition-colors">ลงทะเบียนเรียน
+                                / เพิ่ม-ถอน</a>
+                            <a href="#"
+                                class="block px-4 py-2 hover:bg-mju-50 hover:text-mju-700 text-xs transition-colors">ตารางเรียน
+                                / ตารางสอบ</a>
+                            <a href="#"
+                                class="block px-4 py-2 hover:bg-mju-50 hover:text-mju-700 text-xs transition-colors">ผลการเรียน
+                                (GPAX)</a>
+                            <a href="./profile.html"
+                                class="block px-4 py-2 hover:bg-mju-50 hover:text-mju-700 text-xs transition-colors font-medium text-mju-700">ระเบียนประวัตินักศึกษา</a>
+                        </div>
+                    </li>
+
+                    <!-- 4. อาจารย์/บุคลากร -->
+                    <li class="relative group">
+                        <button
+                            class="px-3 py-1.5 rounded-lg text-mju-100 hover:bg-mju-800/60 hover:text-white transition-all flex items-center gap-1 cursor-pointer">
+                            <span>อาจารย์/บุคลากร</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
+                                stroke="currentColor"
+                                class="w-3.5 h-3.5 text-mju-200 group-hover:text-white transition-transform group-hover:rotate-180">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                            </svg>
+                        </button>
+                        <div
+                            class="absolute left-0 top-full hidden group-hover:block w-48 bg-white text-slate-800 rounded-xl shadow-xl border border-slate-100 py-2 z-50">
+                            <a href="#"
+                                class="block px-4 py-2 hover:bg-mju-50 hover:text-mju-700 text-xs transition-colors">บันทึกผลการเรียน
+                                (ตัดเกรด)</a>
+                            <a href="#"
+                                class="block px-4 py-2 hover:bg-mju-50 hover:text-mju-700 text-xs transition-colors">ตารางสอน
+                                / ตารางสอบ</a>
+                            <a href="#"
+                                class="block px-4 py-2 hover:bg-mju-50 hover:text-mju-700 text-xs transition-colors">ระบบอาจารย์ที่ปรึกษา</a>
+                        </div>
+                    </li>
+
+                    <!-- 5. ผู้สำเร็จการศึกษา -->
+                    <li class="relative group">
+                        <button
+                            class="px-3 py-1.5 rounded-lg text-mju-100 hover:bg-mju-800/60 hover:text-white transition-all flex items-center gap-1 cursor-pointer">
+                            <span>ผู้สำเร็จการศึกษา</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
+                                stroke="currentColor"
+                                class="w-3.5 h-3.5 text-mju-200 group-hover:text-white transition-transform group-hover:rotate-180">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                            </svg>
+                        </button>
+                        <div
+                            class="absolute left-0 top-full hidden group-hover:block w-52 bg-white text-slate-800 rounded-xl shadow-xl border border-slate-100 py-2 z-50">
+                            <a href="#"
+                                class="block px-4 py-2 hover:bg-mju-50 hover:text-mju-700 text-xs transition-colors">ยื่นคำร้องสำเร็จการศึกษา</a>
+                            <a href="#"
+                                class="block px-4 py-2 hover:bg-mju-50 hover:text-mju-700 text-xs transition-colors">ตรวจสอบรายชื่อผู้รับปริญญา</a>
+                        </div>
+                    </li>
+
+                    <!-- 6. ขอเอกสารสำคัญฯ -->
+                    <li class="relative group">
+                        <button
+                            class="px-3 py-1.5 rounded-lg text-mju-100 hover:bg-mju-800/60 hover:text-white transition-all flex items-center gap-1 cursor-pointer">
+                            <span>ขอเอกสารสำคัญฯ</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
+                                stroke="currentColor"
+                                class="w-3.5 h-3.5 text-mju-200 group-hover:text-white transition-transform group-hover:rotate-180">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                            </svg>
+                        </button>
+                        <div
+                            class="absolute left-0 top-full hidden group-hover:block w-56 bg-white text-slate-800 rounded-xl shadow-xl border border-slate-100 py-2 z-50">
+                            <a href="#"
+                                class="block px-4 py-2 hover:bg-mju-50 hover:text-mju-700 text-xs transition-colors">ขอใบรายงานผลการศึกษา
+                                (Transcript)</a>
+                            <a href="#"
+                                class="block px-4 py-2 hover:bg-mju-50 hover:text-mju-700 text-xs transition-colors">ขอหนังสือรับรองสถานภาพนักศึกษา</a>
+                        </div>
+                    </li>
+                </ul>
+
+                <!-- Search in Navbar -->
+                <div class="flex items-center gap-2 mx-2 sm:mx-4">
+                    <div class="relative">
+                        <span
+                            class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gold-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                stroke="currentColor" class="w-3.5 h-3.5">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                            </svg>
+                        </span>
+                        <input id="navbar-search-input" type="text" placeholder="ค้นหาวิชาเรียน, คำร้อง..." class="bg-mju-800/50 text-white placeholder-mju-200 text-xs rounded-full
+                   pl-9 pr-4 py-1.5
+                   border border-gold-400/70 focus:border-gold-400
+                   focus:outline-none focus:ring-1 focus:ring-gold-400/50 focus:bg-mju-800
+                   transition-all w-52" />
+                    </div>
+
+                    <!-- Language switcher -->
+                    <div
+                        class="flex items-center gap-1 bg-mju-800/90 px-2 py-1 rounded-lg border border-mju-500/50 text-xs shadow-2xs shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
+                            stroke="currentColor" class="w-3.5 h-3.5 text-gold-300 mr-0.5">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m-17.432-4.506A8.959 8.959 0 0 0 3 12c0 .778.099 1.533.284 2.253" />
+                        </svg>
+                        <button
+                            class="px-1.5 py-0.5 rounded bg-white/20 text-white font-semibold cursor-pointer transition-all">TH</button>
+                        <span class="text-mju-400/80 font-light">|</span>
+                        <button
+                            class="px-1.5 py-0.5 rounded text-mju-200 hover:text-white font-medium cursor-pointer transition-all">EN</button>
+                    </div>
+                </div>
+
+                <!-- ปุ่มเปลี่ยนภาษา TH / EN (ฝั่งขวาของ Navbar) -->
+
+
+            </div>
+        </div>
+
+    </header>
+
+    <!-- ======================================================= -->
+    <!-- SLIDE BAR MENU (Ultra Light & Minimal Pastel Palette)   -->
+    <!-- สำหรับแสดงผลบนมือถือและแท็บเล็ต (lg:hidden)               -->
+    <!-- ======================================================= -->
+
+    <!-- 1. Backdrop Overlay (ฉากหลังสีดำบางมากๆ 20% เพื่อความสบายตา) -->
+    <div id="mobile-menu-overlay"
+        class="fixed inset-0 bg-slate-900/20 backdrop-blur-xs z-50 hidden opacity-0 transition-opacity duration-300 pointer-events-none lg:hidden">
+    </div>
+
+    <!-- 2. Slide Drawer Panel (โทนสีสว่าง ขาว-ครีมอ่อน สบายตา สไตล์มินิมอล) -->
+    <aside id="mobile-menu"
+        class="fixed top-0 right-0 bottom-0 z-50 w-[85vw] max-w-sm bg-white text-slate-800 shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col h-full overflow-hidden border-l border-slate-200 lg:hidden"
+        aria-label="Mobile Navigation Menu">
+
+        <!-- Header ของ Slide Bar (มินิมอล สะอาดตา โทนสว่าง 100%) -->
+        <div class="px-5 py-4 bg-slate-50/80 border-b border-slate-100 flex items-center justify-between shrink-0">
+            <div class="flex items-center gap-3">
+                <div class="bg-emerald-50 p-1.5 rounded-xl border border-emerald-100 shadow-xs">
+                    <img src="./image/MJU_LOGO.svg.webp" alt="MJU Logo" class="w-7 h-7 object-contain">
+                </div>
+                <div>
+                    <h2 class="font-semibold text-sm text-slate-800 leading-tight">ระบบบริการการศึกษา</h2>
+                    <p class="text-[11px] text-emerald-600 font-medium">มหาวิทยาลัยแม่โจ้</p>
+                </div>
+            </div>
+            <!-- ปุ่มปิดแบบวงกลมมินิมอล -->
+            <button id="mobile-menu-close-btn" aria-label="Close Slide Bar"
+                class="p-2 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 active:scale-95 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                    stroke="currentColor" class="w-5 h-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- เนื้อหาภายใน Slide Bar (Scrollable Content) -->
+        <div class="flex-1 overflow-y-auto px-4 py-4 space-y-4 custom-scrollbar">
+
+            <!-- การ์ดโปรไฟล์นักศึกษาแบบมินิมอล (โทนสีสว่างซอฟต์ๆ) -->
+            <div class="p-3.5 bg-slate-50/80 rounded-2xl border border-slate-100 flex items-center gap-3">
+                <div
+                    class="w-10 h-10 bg-emerald-100/70 text-emerald-700 rounded-full flex items-center justify-center border border-emerald-200/60 shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+                        <path fill-rule="evenodd"
+                            d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.6-7.812-1.7a.75.75 0 01-.437-.695z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="font-semibold text-slate-800 text-xs sm:text-sm truncate">นายจิรภัทร เกตุตรา</p>
+                    <p class="text-[11px] text-slate-500 truncate">รหัส <span
+                            class="text-emerald-700 font-mono font-medium">6804101311</span></p>
+                </div>
+                <span
+                    class="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/60 shrink-0">
+                    นักศึกษา
+                </span>
+            </div>
+
+            <!-- ช่องค้นหาแบบมินิมอลสีสว่าง -->
+            <div class="relative">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                        stroke="currentColor" class="w-4 h-4">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                    </svg>
+                </span>
+                <input type="text" placeholder="ค้นหาวิชาเรียน, ข่าวสาร, คำร้อง..."
+                    class="w-full bg-slate-50 text-slate-800 placeholder-slate-400 text-xs rounded-xl pl-9 pr-3 py-2 border border-slate-200 focus:outline-none focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-500/20 transition-all">
+            </div>
+
+            <!-- รายการเมนูหมวดหมู่หลัก (Minimal Light List) -->
+            <nav class="space-y-1 font-medium text-xs sm:text-sm">
+
+                <!-- 1. หน้าแรก (Active State สีเขียวมิ้นต์อ่อนซอฟต์ๆ) -->
+                <a href="#"
+                    class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-emerald-50/80 text-emerald-800 font-semibold border-l-4 border-emerald-600 transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
+                        stroke="currentColor" class="w-4.5 h-4.5 text-emerald-600">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+                    </svg>
+                    <span>หน้าแรก</span>
+                </a>
+
+                <!-- 2. ข้อมูลที่ควรทราบ (Accordion Menu) -->
+                <div>
+                    <button
+                        class="mobile-accordion-btn w-full px-3.5 py-2.5 rounded-xl flex items-center justify-between text-slate-700 hover:text-emerald-700 hover:bg-slate-50 transition-all">
+                        <div class="flex items-center gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
+                                stroke="currentColor" class="w-4.5 h-4.5 text-slate-400">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+                            </svg>
+                            <span>ข้อมูลที่ควรทราบ</span>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                            stroke="currentColor"
+                            class="w-3.5 h-3.5 text-slate-400 transition-transform duration-200 accordion-arrow">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                        </svg>
+                    </button>
+                    <div
+                        class="mobile-accordion-content hidden ml-4 pl-4 border-l border-slate-200 my-1 space-y-1 text-xs">
+                        <a href="#"
+                            class="block py-1.5 px-2 rounded-lg text-slate-600 hover:text-emerald-700 hover:bg-emerald-50/50 transition-colors">ประกาศการลงทะเบียน</a>
+                        <a href="#"
+                            class="block py-1.5 px-2 rounded-lg text-slate-600 hover:text-emerald-700 hover:bg-emerald-50/50 transition-colors">ปฏิทินการศึกษา</a>
+                        <a href="#"
+                            class="block py-1.5 px-2 rounded-lg text-slate-600 hover:text-emerald-700 hover:bg-emerald-50/50 transition-colors">ระเบียบและข้อบังคับ</a>
+                    </div>
+                </div>
+
+                <!-- 3. นักศึกษา (Accordion Menu) -->
+                <div>
+                    <button
+                        class="mobile-accordion-btn w-full px-3.5 py-2.5 rounded-xl flex items-center justify-between text-slate-700 hover:text-emerald-700 hover:bg-slate-50 transition-all">
+                        <div class="flex items-center gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
+                                stroke="currentColor" class="w-4.5 h-4.5 text-slate-400">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-5.25 6.557c0 1.5.5 3 2.5 3h5.5c2 0 2.5-1.5 2.5-3" />
+                            </svg>
+                            <span>นักศึกษา</span>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                            stroke="currentColor"
+                            class="w-3.5 h-3.5 text-slate-400 transition-transform duration-200 accordion-arrow">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                        </svg>
+                    </button>
+                    <div
+                        class="mobile-accordion-content hidden ml-4 pl-4 border-l border-slate-200 my-1 space-y-1 text-xs">
+                        <a href="#"
+                            class="block py-1.5 px-2 rounded-lg text-slate-600 hover:text-emerald-700 hover:bg-emerald-50/50 transition-colors">ลงทะเบียนเรียน
+                            / เพิ่ม-ถอน</a>
+                        <a href="#"
+                            class="block py-1.5 px-2 rounded-lg text-slate-600 hover:text-emerald-700 hover:bg-emerald-50/50 transition-colors">ตารางเรียน
+                            / ตารางสอบ</a>
+                        <a href="#"
+                            class="block py-1.5 px-2 rounded-lg text-slate-600 hover:text-emerald-700 hover:bg-emerald-50/50 transition-colors">ผลการเรียน
+                            (GPAX)</a>
+                    </div>
+                </div>
+
+                <!-- 4. อาจารย์/บุคลากร (Accordion Menu) -->
+                <div>
+                    <button
+                        class="mobile-accordion-btn w-full px-3.5 py-2.5 rounded-xl flex items-center justify-between text-slate-700 hover:text-emerald-700 hover:bg-slate-50 transition-all">
+                        <div class="flex items-center gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
+                                stroke="currentColor" class="w-4.5 h-4.5 text-slate-400">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                            </svg>
+                            <span>อาจารย์/บุคลากร</span>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                            stroke="currentColor"
+                            class="w-3.5 h-3.5 text-slate-400 transition-transform duration-200 accordion-arrow">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                        </svg>
+                    </button>
+                    <div
+                        class="mobile-accordion-content hidden ml-4 pl-4 border-l border-slate-200 my-1 space-y-1 text-xs">
+                        <a href="#"
+                            class="block py-1.5 px-2 rounded-lg text-slate-600 hover:text-emerald-700 hover:bg-emerald-50/50 transition-colors">บันทึกผลการเรียน
+                            (ตัดเกรด)</a>
+                        <a href="#"
+                            class="block py-1.5 px-2 rounded-lg text-slate-600 hover:text-emerald-700 hover:bg-emerald-50/50 transition-colors">ตารางสอน
+                            / ตารางสอบ</a>
+                        <a href="#"
+                            class="block py-1.5 px-2 rounded-lg text-slate-600 hover:text-emerald-700 hover:bg-emerald-50/50 transition-colors">ระบบอาจารย์ที่ปรึกษา</a>
+                    </div>
+                </div>
+
+                <!-- 5. ผู้สำเร็จการศึกษา (Accordion Menu) -->
+                <div>
+                    <button
+                        class="mobile-accordion-btn w-full px-3.5 py-2.5 rounded-xl flex items-center justify-between text-slate-700 hover:text-emerald-700 hover:bg-slate-50 transition-all">
+                        <div class="flex items-center gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
+                                stroke="currentColor" class="w-4.5 h-4.5 text-slate-400">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z" />
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0112 20.055a11.952 11.952 0 01-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                            </svg>
+                            <span>ผู้สำเร็จการศึกษา</span>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                            stroke="currentColor"
+                            class="w-3.5 h-3.5 text-slate-400 transition-transform duration-200 accordion-arrow">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                        </svg>
+                    </button>
+                    <div
+                        class="mobile-accordion-content hidden ml-4 pl-4 border-l border-slate-200 my-1 space-y-1 text-xs">
+                        <a href="#"
+                            class="block py-1.5 px-2 rounded-lg text-slate-600 hover:text-emerald-700 hover:bg-emerald-50/50 transition-colors">ยื่นคำร้องสำเร็จการศึกษา</a>
+                        <a href="#"
+                            class="block py-1.5 px-2 rounded-lg text-slate-600 hover:text-emerald-700 hover:bg-emerald-50/50 transition-colors">ตรวจสอบรายชื่อผู้รับปริญญา</a>
+                    </div>
+                </div>
+
+                <!-- 6. ขอเอกสารสำคัญฯ (Accordion Menu) -->
+                <div>
+                    <button
+                        class="mobile-accordion-btn w-full px-3.5 py-2.5 rounded-xl flex items-center justify-between text-slate-700 hover:text-emerald-700 hover:bg-slate-50 transition-all">
+                        <div class="flex items-center gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
+                                stroke="currentColor" class="w-4.5 h-4.5 text-slate-400">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                            </svg>
+                            <span>ขอเอกสารสำคัญฯ</span>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                            stroke="currentColor"
+                            class="w-3.5 h-3.5 text-slate-400 transition-transform duration-200 accordion-arrow">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                        </svg>
+                    </button>
+                    <div
+                        class="mobile-accordion-content hidden ml-4 pl-4 border-l border-slate-200 my-1 space-y-1 text-xs">
+                        <a href="#"
+                            class="block py-1.5 px-2 rounded-lg text-slate-600 hover:text-emerald-700 hover:bg-emerald-50/50 transition-colors">ขอใบรายงานผลการศึกษา
+                            (Transcript)</a>
+                        <a href="#"
+                            class="block py-1.5 px-2 rounded-lg text-slate-600 hover:text-emerald-700 hover:bg-emerald-50/50 transition-colors">ขอหนังสือรับรองสถานภาพนักศึกษา</a>
+                    </div>
+                </div>
+
+                <!-- 7. การรับเข้าศึกษา -->
+                <a href="#"
+                    class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-700 hover:text-emerald-700 hover:bg-slate-50 transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
+                        stroke="currentColor" class="w-4.5 h-4.5 text-slate-400">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.5M4.5 21V10.5" />
+                    </svg>
+                    <span>การรับเข้าศึกษา</span>
+                </a>
+
+            </nav>
+        </div>
+
+        <!-- Footer ด้านล่างสุดของ Slide Bar แบบมินิมอล -->
+        <div
+            class="px-4 py-3 bg-slate-50 border-t border-slate-100 shrink-0 text-xs text-slate-500 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span class="text-xs text-slate-600 font-medium">ระบบปกติ</span>
+            </div>
+            <button
+                class="flex items-center gap-1.5 text-rose-600 hover:text-rose-700 transition-colors py-1.5 px-2.5 rounded-lg hover:bg-rose-50 text-xs font-semibold">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
+                    stroke="currentColor" class="w-4 h-4">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l3 3m0 0l-3 3m3-3H8.25" />
+                </svg>
+                <span>ออกจากระบบ</span>
+            </button>
+        </div>
+
+    </aside>
+
+    <!-- พื้นที่สำหรับใส่เนื้อหาหน้าเว็บหลัก (Layout Content) -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-3.5 sm:px-6 py-6 sm:py-10 lg:py-12">
+
+        <!-- Grid Container: Carousel Banner (ซ้าย 8 คอลัมน์) + Quick Access Links (ขวา 4 คอลัมน์) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-8 items-stretch mb-6 sm:mb-10 lg:mb-14">
+
+            <!-- ========================================== -->
+            <!-- 1. CAROUSEL BANNER SLIDER (คอลัมน์ซ้าย) -->
+            <!-- ========================================== -->
+            <div id="banner-carousel"
+                class="lg:col-span-8 bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden relative group h-52 sm:h-72 md:h-80 lg:h-full min-h-[200px] sm:min-h-[300px] lg:min-h-[360px] flex flex-col justify-between">
+
+                <!-- Track สำหรับเลื่อนภาพสไลด์แนวระนาบสมูทๆ (Horizontal Slide Track) -->
+                <div id="carousel-track"
+                    class="absolute inset-0 flex w-full h-full transition-transform duration-700 ease-in-out z-0">
+                    <!-- Slide 1 -->
+                    <div
+                        class="carousel-slide w-full h-full shrink-0 relative overflow-hidden bg-slate-100 flex items-center justify-center">
+                        <img src="./image/poster rov.png" alt="ป้ายประชาสัมพันธ์ 1"
+                            class="w-full h-full object-cover rounded-2xl"
+                            onerror="this.onerror=null; this.src='https://placehold.co/800x400/f1f5f9/64748b?text=Banner+Image+1';">
+                    </div>
+
+                    <!-- Slide 2 -->
+                    <div
+                        class="carousel-slide w-full h-full shrink-0 relative overflow-hidden bg-slate-100 flex items-center justify-center">
+                        <img src="./image/ดีไซน์ที่ยังไม่ได้ตั้งชื่อ (3).png" alt="ป้ายประชาสัมพันธ์ 2"
+                            class="w-full h-full object-cover rounded-2xl"
+                            onerror="this.onerror=null; this.src='https://placehold.co/800x400/f1f5f9/64748b?text=Banner+Image+2';">
+                    </div>
+
+                    <!-- Slide 3 -->
+                    <div
+                        class="carousel-slide w-full h-full shrink-0 relative overflow-hidden bg-slate-100 flex items-center justify-center">
+                        <img src="./image/ดีไซน์ที่ยังไม่ได้ตั้งชื่อ (4).png" alt="ป้ายประชาสัมพันธ์ 3"
+                            class="w-full h-full object-cover rounded-2xl"
+                            onerror="this.onerror=null; this.src='https://placehold.co/800x400/f1f5f9/64748b?text=Banner+Image+3';">
+                    </div>
+                </div>
+
+                <!-- ปุ่มเลื่อน Left (<) & Right (>) Carousel -->
+                <button id="carousel-prev" aria-label="Previous Slide"
+                    class="absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 p-1.5 sm:p-2.5 rounded-full bg-slate-900/40 hover:bg-slate-900/70 text-white backdrop-blur-md transition-all active:scale-95 opacity-80 group-hover:opacity-100 z-20">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
+                        stroke="currentColor" class="w-4 h-4 sm:w-5 sm:h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                    </svg>
+                </button>
+                <button id="carousel-next" aria-label="Next Slide"
+                    class="absolute right-2.5 sm:right-3 top-1/2 -translate-y-1/2 p-1.5 sm:p-2.5 rounded-full bg-slate-900/40 hover:bg-slate-900/70 text-white backdrop-blur-md transition-all active:scale-95 opacity-80 group-hover:opacity-100 z-20">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
+                        stroke="currentColor" class="w-4 h-4 sm:w-5 sm:h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                    </svg>
+                </button>
+
+                <!-- จุดสไลด์บอกตำแหน่ง (Carousel Indicators / Dots) -->
+                <div
+                    class="absolute bottom-2.5 sm:bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-20 bg-slate-900/25 backdrop-blur-md px-2.5 py-1 rounded-full">
+                    <button class="carousel-dot w-5 sm:w-6 h-2 sm:h-2.5 rounded-full bg-mju-600 transition-all"
+                        aria-label="Go to slide 1"></button>
+                    <button
+                        class="carousel-dot w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-slate-300 transition-all hover:bg-mju-400"
+                        aria-label="Go to slide 2"></button>
+                    <button
+                        class="carousel-dot w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-slate-300 transition-all hover:bg-mju-400"
+                        aria-label="Go to slide 3"></button>
+                </div>
+
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 2. QUICK ACCESS LINKS (คอลัมน์ขวา - เมนูด่วน 6 รายการ) -->
+            <!-- ========================================== -->
+            <div
+                class="lg:col-span-4 bg-white rounded-2xl shadow-sm border border-slate-200/80 p-3.5 sm:p-5 flex flex-col justify-between">
+
+                <!-- หัวข้อเมนูด่วน -->
+                <div class="pb-2.5 sm:pb-3 border-b border-slate-100 flex items-center justify-between">
+                    <h3 class="font-bold text-xs sm:text-base text-slate-800 flex items-center gap-2">
+                        <span class="hidden lg:inline-block w-2 h-2 rounded-full bg-mju-600"></span>
+                        <span>เมนูด่วน / บริการยอดฮิต</span>
+                    </h3>
+                    <span class="text-[10px] text-slate-400 font-medium">ระบบบริการการศึกษา</span>
+                </div>
+
+                <!-- รายการปุ่มเมนูด่วน (Mobile: 2 Columns Grid, Tablet: 3 Columns Grid, Desktop: 1 Vertical List) -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-1 gap-2 sm:gap-2.5 my-2">
+
+                    <!-- 1. เข้าสู่ระบบ -->
+                    <a href="#"
+                        class="group flex items-center justify-between p-2.5 rounded-xl bg-slate-50/70 lg:bg-transparent hover:bg-emerald-50/80 transition-all border border-slate-100 lg:border-transparent hover:border-emerald-200 active:scale-95">
+                        <div class="flex items-center gap-2 sm:gap-3">
+                            <div
+                                class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.8" stroke="currentColor" class="w-4 h-4 sm:w-5 sm:h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l3 3m0 0l-3 3m3-3H8.25" />
+                                </svg>
+                            </div>
+                            <span class="font-medium text-xs sm:text-sm text-slate-700 group-hover:text-emerald-800">
+                                เข้าสู่ระบบ
+                            </span>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                            stroke="currentColor"
+                            class="w-3.5 h-3.5 text-slate-300 group-hover:text-emerald-600 transition-transform group-hover:translate-x-0.5 hidden lg:block">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                        </svg>
+                    </a>
+
+                    <!-- 2. ตารางเรียน / ตารางสอบ -->
+                    <a href="#"
+                        class="group flex items-center justify-between p-2.5 rounded-xl bg-slate-50/70 lg:bg-transparent hover:bg-emerald-50/80 transition-all border border-slate-100 lg:border-transparent hover:border-emerald-200 active:scale-95">
+                        <div class="flex items-center gap-2 sm:gap-3">
+                            <div
+                                class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.8" stroke="currentColor" class="w-4 h-4 sm:w-5 sm:h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 0121 11.25v7.5" />
+                                </svg>
+                            </div>
+                            <span class="font-medium text-xs sm:text-sm text-slate-700 group-hover:text-emerald-800">
+                                ตารางเรียน / ตารางสอบ
+                            </span>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                            stroke="currentColor"
+                            class="w-3.5 h-3.5 text-slate-300 group-hover:text-emerald-600 transition-transform group-hover:translate-x-0.5 hidden lg:block">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                        </svg>
+                    </a>
+
+                    <!-- 3. ผลการเรียน (GPAX) -->
+                    <a href="#"
+                        class="group flex items-center justify-between p-2.5 rounded-xl bg-slate-50/70 lg:bg-transparent hover:bg-emerald-50/80 transition-all border border-slate-100 lg:border-transparent hover:border-emerald-200 active:scale-95">
+                        <div class="flex items-center gap-2 sm:gap-3">
+                            <div
+                                class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.8" stroke="currentColor" class="w-4 h-4 sm:w-5 sm:h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-5.25 6.557c0 1.5.5 3 2.5 3h5.5c2 0 2.5-1.5 2.5-3" />
+                                </svg>
+                            </div>
+                            <span class="font-medium text-xs sm:text-sm text-slate-700 group-hover:text-emerald-800">
+                                ผลการเรียน (GPAX)
+                            </span>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                            stroke="currentColor"
+                            class="w-3.5 h-3.5 text-slate-300 group-hover:text-emerald-600 transition-transform group-hover:translate-x-0.5 hidden lg:block">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                        </svg>
+                    </a>
+
+                    <!-- 4. ปฏิทินการศึกษา -->
+                    <a href="#"
+                        class="group flex items-center justify-between p-2.5 rounded-xl bg-slate-50/70 lg:bg-transparent hover:bg-emerald-50/80 transition-all border border-slate-100 lg:border-transparent hover:border-emerald-200 active:scale-95">
+                        <div class="flex items-center gap-2 sm:gap-3">
+                            <div
+                                class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.8" stroke="currentColor" class="w-4 h-4 sm:w-5 sm:h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                </svg>
+                            </div>
+                            <span class="font-medium text-xs sm:text-sm text-slate-700 group-hover:text-emerald-800">
+                                ปฏิทินการศึกษา
+                            </span>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                            stroke="currentColor"
+                            class="w-3.5 h-3.5 text-slate-300 group-hover:text-emerald-600 transition-transform group-hover:translate-x-0.5 hidden lg:block">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                        </svg>
+                    </a>
+
+                    <!-- 5. ขอเอกสารสำคัญฯ -->
+                    <a href="#"
+                        class="group flex items-center justify-between p-2.5 rounded-xl bg-slate-50/70 lg:bg-transparent hover:bg-emerald-50/80 transition-all border border-slate-100 lg:border-transparent hover:border-emerald-200 active:scale-95">
+                        <div class="flex items-center gap-2 sm:gap-3">
+                            <div
+                                class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.8" stroke="currentColor" class="w-4 h-4 sm:w-5 sm:h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                                </svg>
+                            </div>
+                            <span class="font-medium text-xs sm:text-sm text-slate-700 group-hover:text-emerald-800">
+                                ขอเอกสารสำคัญฯ
+                            </span>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                            stroke="currentColor"
+                            class="w-3.5 h-3.5 text-slate-300 group-hover:text-emerald-600 transition-transform group-hover:translate-x-0.5 hidden lg:block">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                        </svg>
+                    </a>
+
+                    <!-- 6. คำถามที่พบบ่อย (FAQ) -->
+                    <a href="#"
+                        class="group flex items-center justify-between p-2.5 rounded-xl bg-slate-50/70 lg:bg-transparent hover:bg-emerald-50/80 transition-all border border-slate-100 lg:border-transparent hover:border-emerald-200 active:scale-95">
+                        <div class="flex items-center gap-2 sm:gap-3">
+                            <div
+                                class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.8" stroke="currentColor" class="w-4 h-4 sm:w-5 sm:h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M12 18h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                </svg>
+                            </div>
+                            <span class="font-medium text-xs sm:text-sm text-slate-700 group-hover:text-emerald-800">
+                                คำถามที่พบบ่อย (FAQ)
+                            </span>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                            stroke="currentColor"
+                            class="w-3.5 h-3.5 text-slate-300 group-hover:text-emerald-600 transition-transform group-hover:translate-x-0.5 hidden lg:block">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                        </svg>
+                    </a>
+
+                </div>
+
+                <!-- การ์ดช่วยเหลือ/ติดต่อสอบถามด้านล่าง -->
+                <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
+                    <div class="flex items-center gap-2 text-xs text-slate-500">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                        <span>ระบบเปิดให้บริการปกติ</span>
+                    </div>
+                    <a href="tel:053873460"
+                        class="text-[11px] font-semibold text-emerald-600 hover:text-emerald-700 hover:underline flex items-center gap-1">
+                        <span>ติดต่อ 053-873460</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                            stroke="currentColor" class="w-3 h-3">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                        </svg>
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Section: ข่าวสารและประกาศประชาสัมพันธ์ (Modern Clean News Section) -->
+        <section class="news-section mb-8 sm:mb-12 lg:mb-16">
+
+            <!-- Section Header -->
+            <div class="news-section-header">
+                <div>
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="hidden lg:inline-block w-2.5 h-2.5 rounded-full bg-mju-600"></span>
+                        <span class="text-xs font-semibold text-mju-700 tracking-wider uppercase">ข่าวสารล่าสุด</span>
+                    </div>
+                    <h2 class="news-section-title">
+                        ประกาศและข่าวสารประชาสัมพันธ์
+                    </h2>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="text-xs text-slate-400 font-medium hidden sm:inline">อัปเดตล่าสุด 12 ส.ค. 2026</span>
+                    <a href="#" class="news-see-all-btn">
+                        <span>ดูข่าวทั้งหมด</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                            stroke="currentColor" class="w-4 h-4">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Category Filter Tabs Container -->
+            <div class="news-filter-container" id="news-filter-tabs">
+                <button class="news-filter-tab active" data-category="all">ทั้งหมด</button>
+                <button class="news-filter-tab" data-category="reg">ลงทะเบียน &amp; ชำระเงิน</button>
+                <button class="news-filter-tab" data-category="digital">บริการดิจิทัล</button>
+                <button class="news-filter-tab" data-category="ceremony">พิธีการ &amp; กิจกรรม</button>
+                <button class="news-filter-tab" data-category="welfare">ทุน &amp; สวัสดิการ</button>
+            </div>
+
+            <!-- News Grid Container: 4 คอลัมน์พรีเมียม สไตล์ Modern Web App -->
+            <div class="news-grid items-stretch" id="news-grid">
+
+                <!-- News Card 1: กำหนดการสอบกลางภาค 1/2569 (โปสเตอร์ที่ 1) -->
+                <article class="news-card" data-category="reg">
+                    <div class="news-card-accent-bar"></div>
+                    <div class="news-card-img-wrap">
+                        <img src="./image/4669_25690724165319.jpg" alt="กำหนดการสอบกลางภาค 1/2569" class="news-card-img"
+                            onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=600&q=80';">
+                        <div class="news-card-overlay"></div>
+                        <span class="news-card-badge bg-mju-600 text-white font-semibold">
+                            ตารางสอบกลางภาค
+                        </span>
+                    </div>
+                    <div class="news-card-body">
+                        <div class="space-y-2">
+                            <div class="news-card-meta">
+                                <div class="flex items-center gap-1.5">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.8" stroke="currentColor" class="w-3.5 h-3.5 text-slate-400">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 0121 11.25v7.5" />
+                                    </svg>
+                                    <span>27 ก.ค. 2569</span>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="news-card-title">
+                                    กำหนดการสอบกลางภาค ภาคเรียนที่ 1 ปีการศึกษา 2569 (24 - 30 สิงหาคม 2569)
+                                </h3>
+                                <p class="news-card-desc">
+                                    นักศึกษาสามารถตรวจสอบ วัน เวลา ห้องสอบ และเลขที่นั่งสอบได้ตั้งแต่วันที่ 27 กรกฎาคม
+                                    2569 เวลา 13.00 น. เป็นต้นไป ผ่านระบบบริการการศึกษา หรือสแกน QR Code
+                                </p>
+                            </div>
+                        </div>
+                        <div class="news-card-footer">
+                            <span class="text-[11px] font-medium text-slate-400">ฝ่ายประมวลผลและวัดผลการศึกษา</span>
+                            <div class="news-card-footer-arrow">
+                                <span>อ่านรายละเอียด</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                    stroke="currentColor" class="w-3.5 h-3.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- News Card 2: การชำระเงินค่าธรรมเนียม & ชำระล่าช้า (โปสเตอร์ที่ 2) -->
+                <article class="news-card" data-category="reg">
+                    <div class="news-card-accent-bar"></div>
+                    <div class="news-card-img-wrap">
+                        <img src="./image/การชำระเงิน.png" alt="ขั้นตอนการชำระเงินค่าธรรมเนียม" class="news-card-img"
+                            onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=600&q=80';">
+                        <div class="news-card-overlay"></div>
+                        <span class="news-card-badge bg-mju-600 text-white font-semibold">
+                            ชำระเงิน &amp; ค่าปรับ
+                        </span>
+                    </div>
+                    <div class="news-card-body">
+                        <div class="space-y-2">
+                            <div class="news-card-meta">
+                                <div class="flex items-center gap-1.5">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.8" stroke="currentColor" class="w-3.5 h-3.5 text-slate-400">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 0121 11.25v7.5" />
+                                    </svg>
+                                    <span>01 ส.ค. 2569</span>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="news-card-title">
+                                    ขั้นตอนการชำระเงินค่าธรรมเนียมการศึกษา และเงื่อนไขการชำระเงินล่าช้า 1/2569
+                                </h3>
+                                <p class="news-card-desc">
+                                    พิมพ์ใบชำระเงินผ่าน reg.mju.ac.th สแกน QR Code ผ่านแอปธนาคาร กรณีชำระล่าช้าปรับวันละ
+                                    100 บาท หากพ้นกำหนดการชำระ การลงทะเบียนจะถือเป็นโมฆะและพ้นสภาพนักศึกษา
+                                </p>
+                            </div>
+                        </div>
+                        <div class="news-card-footer">
+                            <span class="text-[11px] font-medium text-slate-400">งานการเงินและคลัง สำนักบริหารฯ</span>
+                            <div class="news-card-footer-arrow">
+                                <span>อ่านรายละเอียด</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                    stroke="currentColor" class="w-3.5 h-3.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- News Card 3: ข้อควรระวังการเข้าใช้งานเว็บไซต์ (โปสเตอร์ที่ 3) -->
+                <article class="news-card" data-category="digital">
+                    <div class="news-card-accent-bar"></div>
+                    <div class="news-card-img-wrap">
+                        <img src="./image/การเข้าใช้งานเว็บไซต์.jpg" alt="ข้อควรระวังในการเข้าใช้งานเว็บไซต์"
+                            class="news-card-img"
+                            onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=600&q=80';">
+                        <div class="news-card-overlay"></div>
+                        <span class="news-card-badge bg-mju-600 text-white font-semibold">
+                            ข้อควรระวังสำคัญ
+                        </span>
+                    </div>
+                    <div class="news-card-body">
+                        <div class="space-y-2">
+                            <div class="news-card-meta">
+                                <div class="flex items-center gap-1.5">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.8" stroke="currentColor" class="w-3.5 h-3.5 text-slate-400">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 0121 11.25v7.5" />
+                                    </svg>
+                                    <span>05 ส.ค. 2569</span>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="news-card-title">
+                                    ข้อควรระวังในการเข้าใช้งานเว็บไซต์ REG.MJU.AC.TH และ EDU.MJU.AC.TH
+                                </h3>
+                                <p class="news-card-desc">
+                                    โปรดพิมพ์ URL ผ่าน Web Browser (Chrome, Edge, Safari, Firefox) เท่านั้น!
+                                    หลีกเลี่ยงการกดลิงก์ผ่านแอปอื่น เช่น Facebook หรือ Line
+                                    เพราะระบบจะไม่สามารถพิมพ์ใบชำระเงินได้
+                                </p>
+                            </div>
+                        </div>
+                        <div class="news-card-footer">
+                            <span class="text-[11px] font-medium text-slate-400">ศูนย์เทคโนโลยีดิจิทัล (IT MJU)</span>
+                            <div class="news-card-footer-arrow">
+                                <span>อ่านรายละเอียด</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                    stroke="currentColor" class="w-3.5 h-3.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- News Card 4: กำหนดการถอนรายวิชาโดยได้รับอักษร W (โปสเตอร์ที่ 4) -->
+                <article class="news-card" data-category="reg">
+                    <div class="news-card-accent-bar"></div>
+                    <div class="news-card-img-wrap">
+                        <img src="./image/4088_25690703084217.jpg" alt="กำหนดการถอนรายวิชา Drop W" class="news-card-img"
+                            onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=600&q=80';">
+                        <div class="news-card-overlay"></div>
+                        <span class="news-card-badge bg-mju-600 text-white font-semibold">
+                            ถอนรายวิชา Drop W
+                        </span>
+                    </div>
+                    <div class="news-card-body">
+                        <div class="space-y-2">
+                            <div class="news-card-meta">
+                                <div class="flex items-center gap-1.5">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.8" stroke="currentColor" class="w-3.5 h-3.5 text-slate-400">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 0121 11.25v7.5" />
+                                    </svg>
+                                    <span>10 ส.ค. 2569</span>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="news-card-title">
+                                    กำหนดการยื่นถอนรายวิชาโดยได้รับอักษร W ภาคเรียนที่ 1 ปีการศึกษา 2569
+                                </h3>
+                                <p class="news-card-desc">
+                                    นักศึกษาสามารถดำเนินการยื่นบอกเลิกรายวิชาออนไลน์ (Drop W)
+                                    ผ่านทางระบบสารสนเทศสำหรับนักศึกษา edu.mju.ac.th/Student เมนู
+                                    "ระบบบอกเลิกรายวิชาออนไลน์"
+                                </p>
+                            </div>
+                        </div>
+                        <div class="news-card-footer">
+                            <span class="text-[11px] font-medium text-slate-400">สำนักบริหารและพัฒนาวิชาการ</span>
+                            <div class="news-card-footer-arrow">
+                                <span>อ่านรายละเอียด</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                    stroke="currentColor" class="w-3.5 h-3.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer ส่วนล่างของเว็บไซต์ -->
+    <footer class="bg-white border-t border-slate-200/80 text-slate-600 mt-10 sm:mt-16 lg:mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-10 pb-8 sm:pt-12 sm:pb-10">
+            <!-- 3 Columns Footer Container -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-12 gap-8 lg:gap-12 pb-8 border-b border-slate-100">
+
+                <!-- Column 1: หน่วยงาน/เว็บไซต์ที่เกี่ยวข้อง -->
+                <div class="sm:col-span-1 md:col-span-5 space-y-3 pb-5 sm:pb-0 border-b sm:border-b-0 border-slate-100">
+                    <h3 class="text-sm font-bold text-mju-800 tracking-wide flex items-center gap-2">
+                        <span class="hidden lg:inline-block w-1.5 h-3.5 bg-mju-600 rounded-full"></span>
+                        <span>หน่วยงาน/เว็บไซต์ที่เกี่ยวข้อง</span>
+                    </h3>
+                    <ul class="space-y-1.5 text-xs sm:text-[13px] text-slate-500 font-normal">
+                        <li>
+                            <a href="#"
+                                class="hover:text-mju-700 hover:translate-x-0.5 transition-all inline-block py-0.5">
+                                การคัดเลือกเข้าศึกษาระดับปริญญาตรี (TCAS Maejo)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="hover:text-mju-700 hover:translate-x-0.5 transition-all inline-block py-0.5">
+                                ระบบรับสมัครเข้าศึกษา บัณฑิตวิทยาลัย (ระดับผู้สูงอายุ/ป.โท-เอก)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="hover:text-mju-700 hover:translate-x-0.5 transition-all inline-block py-0.5">
+                                บัณฑิตวิทยาลัย มหาวิทยาลัยแม่โจ้
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="hover:text-mju-700 hover:translate-x-0.5 transition-all inline-block py-0.5">
+                                สำนักบริหารและพัฒนาวิชาการ (Maejo Reg)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="hover:text-mju-700 hover:translate-x-0.5 transition-all inline-block py-0.5">
+                                ศูนย์เทคโนโลยีดิจิทัล มหาวิทยาลัยแม่โจ้ (IT MJU)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="hover:text-mju-700 hover:translate-x-0.5 transition-all inline-block py-0.5">
+                                สำนักหอสมุด มหาวิทยาลัยแม่โจ้
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="hover:text-mju-700 hover:translate-x-0.5 transition-all inline-block py-0.5">
+                                กองพัฒนานักศึกษา สำนักงานอธิการบดี
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Column 2: ข้อมูลอื่นๆ & Social -->
+                <div class="sm:col-span-1 md:col-span-3 space-y-3 pb-5 sm:pb-0 border-b sm:border-b-0 border-slate-100">
+                    <h3 class="text-sm font-bold text-mju-800 tracking-wide flex items-center gap-2">
+                        <span class="hidden lg:inline-block w-1.5 h-3.5 bg-mju-600 rounded-full"></span>
+                        <span>ข้อมูลอื่นๆ</span>
+                    </h3>
+                    <ul class="space-y-1.5 text-xs sm:text-[13px] text-slate-500 font-normal">
+                        <li>
+                            <a href="#"
+                                class="hover:text-mju-700 hover:translate-x-0.5 transition-all inline-block py-0.5">
+                                เกี่ยวกับสำนักบริหารและพัฒนาวิชาการ
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="hover:text-mju-700 hover:translate-x-0.5 transition-all inline-block py-0.5">
+                                ประกาศจัดซื้อจัดจ้าง
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="hover:text-mju-700 hover:translate-x-0.5 transition-all inline-block py-0.5">
+                                ดาวน์โหลดแบบฟอร์มคำร้องเรียน
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="hover:text-mju-700 hover:translate-x-0.5 transition-all inline-block py-0.5">
+                                คำถามที่พบบ่อย (FAQ)
+                            </a>
+                        </li>
+                    </ul>
+
+                    <!-- Social Icons (Facebook, Messenger, Line) -->
+                    <div class="pt-2 space-y-2">
+                        <span
+                            class="text-[11px] font-semibold text-slate-400 block uppercase tracking-wider">ช่องทางติดตาม</span>
+                        <div class="flex items-center gap-2">
+                            <!-- Facebook -->
+                            <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook Page"
+                                class="w-8 h-8 rounded-full bg-slate-100 hover:bg-mju-600 text-slate-500 hover:text-white flex items-center justify-center transition-all shadow-2xs">
+                                <svg class="w-4 h-4 mx-auto" fill="currentColor" viewBox="0 0 24 24">
+                                    <path fill-rule="evenodd"
+                                        d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </a>
+                            <!-- Messenger -->
+                            <a href="https://messenger.com" target="_blank" rel="noopener" aria-label="Messenger"
+                                class="w-8 h-8 rounded-full bg-slate-100 hover:bg-mju-600 text-slate-500 hover:text-white flex items-center justify-center transition-all shadow-2xs">
+                                <svg class="w-4 h-4 mx-auto" fill="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        d="M12 2C6.477 2 2 6.145 2 11.258c0 2.91 1.455 5.51 3.733 7.182v3.56l3.418-1.876c.928.257 1.914.396 2.849.396 5.523 0 10-4.145 10-9.26C22 6.145 17.523 2 12 2zm1.042 12.381l-2.56-2.73-5.002 2.73 5.498-5.834 2.62 2.73 4.942-2.73-5.498 5.834z" />
+                                </svg>
+                            </a>
+                            <!-- Line -->
+                            <a href="#" target="_blank" rel="noopener" aria-label="Line Official Account"
+                                class="w-8 h-8 rounded-full bg-slate-100 hover:bg-emerald-600 text-slate-500 hover:text-white flex items-center justify-center transition-all shadow-2xs">
+                                <svg class="w-4 h-4 mx-auto" fill="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.412-.105-.531-.284l-2.204-3.235v2.892c0 .345-.282.63-.627.63-.348 0-.63-.285-.63-.63V8.108c0-.27.174-.51.432-.596.063-.021.132-.031.2-.031.21 0 .411.105.53.284l2.204 3.235V8.108c0-.345.282-.63.628-.63.345 0 .629.285.629.63v4.771zm-5.741 0c0 .345-.282.63-.63.63-.345 0-.627-.285-.627-.63V8.108c0-.345.282-.63.63-.63.345 0 .627.285.627.63v4.771zm-2.466.63H4.917c-.345 0-.63-.285-.63-.63V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629zM24 10.614c0-4.821-4.836-8.73-10.771-8.73C7.29 1.884 2.455 5.793 2.455 10.614c0 4.316 3.834 7.928 9.011 8.567.35.076.828.232.948.533.108.272.071.696.035.972-.077.587-.349 2.296-.388 2.547-.058.375.271.62.571.408 2.385-1.685 6.444-4.819 8.796-8.25C23.018 13.791 24 12.28 24 10.614z" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Column 3: สำนักบริหารและพัฒนาวิชาการ มหาวิทยาลัยแม่โจ้ -->
+                <div class="sm:col-span-2 md:col-span-4 space-y-3">
+                    <h3 class="text-sm font-bold text-mju-800 tracking-wide flex items-center gap-2">
+                        <span class="hidden lg:inline-block w-1.5 h-3.5 bg-mju-600 rounded-full"></span>
+                        <span>สำนักบริหารและพัฒนาวิชาการ มหาวิทยาลัยแม่โจ้</span>
+                    </h3>
+                    <div class="space-y-2 text-xs sm:text-[13px] text-slate-500 leading-relaxed font-normal">
+                        <p class="text-slate-700 font-medium">
+                            63 หมู่ 4 ต.หนองหาร อ.สันทราย จ.เชียงใหม่ 50290
+                        </p>
+                        <div class="space-y-1 text-slate-500">
+                            <p>โทรศัพท์ : <a href="tel:053873460" class="hover:text-mju-700">053-873460 - 61</a></p>
+                            <p>โทรสาร : 053-873462</p>
+                            <p>อีเมล : <a href="mailto:reg@mju.ac.th"
+                                    class="hover:text-mju-700 font-medium text-mju-600">reg@mju.ac.th</a></p>
+                        </div>
+                        <div class="pt-2 border-t border-slate-100 space-y-1">
+                            <p class="flex items-center gap-1.5">
+                                <span class="font-semibold text-slate-700">เวลาทำการ:</span>
+                                <span>08:30 - 16:30 น. (จันทร์ - ศุกร์)</span>
+                            </p>
+                            <p class="flex items-center gap-1.5">
+                                <span class="font-semibold text-slate-700">รับชำระเงิน:</span>
+                                <span>08:30 - 15:30 น.</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Bottom Copyright Line -->
+            <div
+                class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400 font-medium">
+                <p class="text-center sm:text-left">
+                    © 2026 สำนักบริหารและพัฒนาวิชาการ มหาวิทยาลัยแม่โจ้ (Office of Educational Administration, Maejo
+                    University). All rights reserved.
+                </p>
+                <div class="flex items-center gap-4 text-[11px]">
+                    <a href="#" class="hover:text-mju-700 transition-colors">นโยบายความเป็นส่วนตัว</a>
+                    <span>•</span>
+                    <a href="#" class="hover:text-mju-700 transition-colors">ข้อกำหนดการใช้งาน</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Script ควบคุมเปิด/ปิด Slide Bar, Accordion และ Carousel Banner -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuBtn = document.getElementById('mobile-menu-btn');
+            const closeBtn = document.getElementById('mobile-menu-close-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuOverlay = document.getElementById('mobile-menu-overlay');
+
+            function openMenu() {
+                if (!mobileMenu || !menuOverlay) return;
+                menuOverlay.classList.remove('hidden');
+                void menuOverlay.offsetWidth;
+                menuOverlay.classList.remove('opacity-0', 'pointer-events-none');
+                menuOverlay.classList.add('opacity-100');
+                mobileMenu.classList.remove('translate-x-full');
+                document.body.classList.add('overflow-hidden');
+            }
+
+            function closeMenu() {
+                if (!mobileMenu || !menuOverlay) return;
+                mobileMenu.classList.add('translate-x-full');
+                menuOverlay.classList.remove('opacity-100');
+                menuOverlay.classList.add('opacity-0', 'pointer-events-none');
+                setTimeout(() => {
+                    menuOverlay.classList.add('hidden');
+                }, 300);
+                document.body.classList.remove('overflow-hidden');
+            }
+
+            if (menuBtn) menuBtn.addEventListener('click', openMenu);
+            if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+            if (menuOverlay) menuOverlay.addEventListener('click', closeMenu);
+
+            // Close Slide Bar on ESC key press
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && mobileMenu && !mobileMenu.classList.contains('translate-x-full')) {
+                    closeMenu();
+                }
+            });
+
+            // ควบคุม Accordion เมนูย่อยใน Slide Bar
+            const accordionBtns = document.querySelectorAll('.mobile-accordion-btn');
+            accordionBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const content = btn.nextElementSibling;
+                    const arrow = btn.querySelector('.accordion-arrow');
+
+                    if (content) {
+                        content.classList.toggle('hidden');
+                    }
+                    if (arrow) {
+                        arrow.classList.toggle('rotate-180');
+                    }
+                });
+            });
+
+            // ควบคุม Carousel Banner Slider (ป้ายสไลด์ประชาสัมพันธ์เลื่อนแนวนอนแบบราบรื่น)
+            const slides = document.querySelectorAll('.carousel-slide');
+            const dots = document.querySelectorAll('.carousel-dot');
+            const prevBtn = document.getElementById('carousel-prev');
+            const nextBtn = document.getElementById('carousel-next');
+            const carouselEl = document.getElementById('banner-carousel');
+            const carouselTrack = document.getElementById('carousel-track');
+            let currentSlide = 0;
+            let slideTimer = null;
+            const AUTO_SLIDE_INTERVAL = 4000;
+
+            function showSlide(index) {
+                if (!slides.length) return;
+                currentSlide = (index + slides.length) % slides.length;
+
+                if (carouselTrack) {
+                    carouselTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
+                }
+
+                dots.forEach((dot, i) => {
+                    if (i === currentSlide) {
+                        dot.classList.add('bg-mju-600', 'w-6');
+                        dot.classList.remove('bg-slate-300', 'w-2.5');
+                    } else {
+                        dot.classList.add('bg-slate-300', 'w-2.5');
+                        dot.classList.remove('bg-mju-600', 'w-6');
+                    }
+                });
+            }
+
+            function nextSlide() {
+                showSlide(currentSlide + 1);
+            }
+
+            function prevSlide() {
+                showSlide(currentSlide - 1);
+            }
+
+            function stopTimer() {
+                if (slideTimer) {
+                    clearInterval(slideTimer);
+                    slideTimer = null;
+                }
+            }
+
+            function startTimer() {
+                stopTimer();
+                slideTimer = setInterval(nextSlide, AUTO_SLIDE_INTERVAL);
+            }
+
+            function resetTimer() {
+                stopTimer();
+                startTimer();
+            }
+
+            if (nextBtn) {
+                nextBtn.addEventListener('click', () => {
+                    nextSlide();
+                    resetTimer();
+                });
+            }
+
+            if (prevBtn) {
+                prevBtn.addEventListener('click', () => {
+                    prevSlide();
+                    resetTimer();
+                });
+            }
+
+            dots.forEach((dot, i) => {
+                dot.addEventListener('click', () => {
+                    showSlide(i);
+                    resetTimer();
+                });
+            });
+
+            if (carouselEl) {
+                carouselEl.addEventListener('mouseenter', stopTimer);
+                carouselEl.addEventListener('mouseleave', startTimer);
+
+                let touchStartX = 0;
+                let touchEndX = 0;
+
+                carouselEl.addEventListener('touchstart', (e) => {
+                    touchStartX = e.changedTouches[0].screenX;
+                    stopTimer();
+                }, { passive: true });
+
+                carouselEl.addEventListener('touchend', (e) => {
+                    touchEndX = e.changedTouches[0].screenX;
+                    handleSwipe();
+                    startTimer();
+                }, { passive: true });
+
+                function handleSwipe() {
+                    const swipeThreshold = 40;
+                    if (touchEndX < touchStartX - swipeThreshold) {
+                        nextSlide();
+                    } else if (touchEndX > touchStartX + swipeThreshold) {
+                        prevSlide();
+                    }
+                }
+            }
+
+            showSlide(0);
+            startTimer();
+
+            // ควบคุมการกรองหมวดหมู่ข่าวสาร (News Category Filter)
+            const newsTabs = document.querySelectorAll('#news-filter-tabs .news-filter-tab');
+            const newsCards = document.querySelectorAll('#news-grid .news-card');
+
+            newsTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const category = tab.getAttribute('data-category');
+
+                    newsTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+
+                    newsCards.forEach(card => {
+                        const cardCategory = card.getAttribute('data-category');
+                        if (category === 'all' || cardCategory === category) {
+                            card.style.display = 'flex';
+                            card.style.opacity = '1';
+                            card.style.transform = 'translateY(0)';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+
+    </script>
+</body>
+
+</html>

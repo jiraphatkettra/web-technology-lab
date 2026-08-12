@@ -1,0 +1,11 @@
+# Node modules
+node_modules/
+
+# Build logs & temp files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# System Files
+.DS_Store
+Thumbs.db
